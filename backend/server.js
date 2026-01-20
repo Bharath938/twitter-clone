@@ -37,10 +37,12 @@ app.use("/api/posts", postRoute);
 app.use("/api/notifications", notificationRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "frontend/dist")));
+  const frontendPath = path.resolve(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
 
-  app.get("/*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+  // Catch-all route for React (works on Render)
+  app.get(/^\/.*$/, (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
